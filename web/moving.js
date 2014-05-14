@@ -1,14 +1,26 @@
 /**
  * Created by Grigoriy on 28.04.2014.
+ * набор инструментов для осуществления анимации
  */
 
-// Tile object
+/**
+* Tile предназначен для инкапсуляции действий
+* по перемещению DOM-элементов
+* при создании нужно указать идентификатор объекта
+* innerObjectId - идентификатор элемента DOM
+* реализует следующие функции:
+    moveTo(x, y)    - перемещает объект в заданные кординаты
+    moveToX(x)      - перемещает объект, изменяя его x-координату, на заданную
+    moveToY(y)      - перемещает объект, изменяя его y-координату, на заданную
+    moveOn(x, y)    - перемещает объект, увеличивая его координаты на заданные величины
+    moveOnX(x)      - перемещает объект, увеличивая его x-координату, на заданную величину
+    moveOnY(y)      - перемещает объект, увеличивая его x-координату, на заданную величину
+*/
+
 function Tile(innerObjectId)
 {
-
-
     this.innerObject = document.getElementById(innerObjectId);
-    console.log(this.innerObject);
+
     if (this.innerObject)
     {
         this.innerObject.style.position = "absolute";
@@ -19,83 +31,131 @@ function Tile(innerObjectId)
         this.y = 0;
         this.y += this.innerObject.offsetTop;
 
-        this.refresh = function()
+        this.moveTo = function(x, y)
         {
+            this.x = x;
+            this.y = y;
+
             this.innerObject.style.left = this.x + "px";
             this.innerObject.style.top = this.y+ "px";
 
-            console.log("offsetLeft: " + this.innerObject.offsetLeft);
-            console.log("offsetTop: " + this.innerObject.offsetTop);
+            console.log("this.innerObject.style.left:" + this.innerObject.style.left);
         }
 
-        this.move = function(x,  y)
+        this.moveToX = function(x)
         {
-            this.x += x;
-            this.y += y;
-            this.refresh();
-            console.log('x='+this.x +';y='+this.y);
+
+            this.moveTo(x, this.y);
         }
 
+        this.moveToY = function(y)
+        {
+            this.moveTo(this.x, y);
+        }
 
+        this.moveOn = function(x,  y)
+        {
+            this.moveTo(this.x + x, this.y + y);
+        }
+
+        this.moveOnX = function(x)
+        {
+
+            this.moveOn(x, 0);
+        }
+
+        this.moveOnY = function(y)
+        {
+            this.moveOn(0, y);
+        }
 
     }else{
-        console.log('object not found');
+        console.log('Tile creation failed: object with specified id('+innerObjectId+') not found');
     }
 }
 
-///
-function Mover(movedTile)
-{
-    this.tile = movedTile;
+var linearDelta = function(progress, distance) {
+        return progress*distance;
+    }
 
-    this.from = this.tile.x;
+function Animation(tile, from, to, duration, interval, delta)
+{
+    this.tile = tile;
+    this.from = from;
+    this.to = to;
+    this.duration = duration;
+    this.interval = interval;
+    this.delta = delta;
+    console.log(this.delta);
+    this.startTime = 0;
 
 
     this.cycle = function(){
-
-
+        console.log('cycle');
         var now = (new Date().getTime()) - this.startTime; // Текущее время
-        var progress = now / this.duration; // Прогресс анимации
-
-        console.log("another iteration. progress: " + progress);
-
-        var newX = (this.to - this.from) * this.delta(progress) + this.from;
-
-
-        this.tile.move(newX,  this.tile.y);
+        var progress = now / duration; // Прогресс анимации
+     //   console.log(this.delta);
+        var position = this.from +  linearDelta(progress, (to - from));
+        console.log('progress:'+progress);
+        console.log('position:'+position);
+        this.tile.moveToX(position);
         if (progress < 1){
-            setTimeout( this.cycle, 10);
+            console.log('interval:'+interval);
+
+            var self = this;
+            setTimeout(function(){ self.cycle(); }, this.interval);
         }
     }
 
-
-    this.start = function(length, duration, delta)
+    this.start = function()
     {
-        console.log("try to start");
         this.startTime = (new Date().getTime());
-        this.to =  this.from + length;
-        this.duration = duration;
-        this.delta = delta;
-        this.cycle();
-
+        this.tile.moveToX(this.from);
+        this.cycle(this.delta);
     }
 
-}
 
-function linearDelta(progress) {
-    return progress;
 }
 
 
 window.onload = function() {
     var tile = new Tile('img1');
-    var mover = new Mover(tile);
 
-    setTimeout(function(){
+
+
+
+    var animation = new Animation(tile, 50, 350, 1000, 100, linearDelta);
+
+    animation.start();
+
+
+
+/*    startTime = (new Date().getTime()) + 1000;
+
+    var cycle = function(){
+        var now = (new Date().getTime()) - startTime; // Текущее время
+        console.log("now = " + now);
+        var progress = now / duration; // Прогресс анимации
+        console.log("progress = " + progress);
+        var position = from +   linearDelta(progress, (to - from));
+        console.log("progress = " + position);
+
+        tile.moveToX(position);
+        if (progress < 1){
+            setTimeout(cycle, 10);
+            counter++;
+        }
+    }
+
+    setTimeout(cycle, 1000);
+
+
+
+   /* setTimeout(function(){
             mover.start(400, 2000, linearDelta);
             console.log("start executed");
         },
         1000);
-
+    */
    // tile.move(100, 100);
 }
