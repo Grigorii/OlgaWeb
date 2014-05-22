@@ -78,6 +78,55 @@ var linearDelta = function(progress, distance) {
         return progress*distance;
     }
 
+var sinusDelta = function(progress, distance) {
+    return distance*((-Math.cos(progress*Math.PI)/2) + 0.5);
+}
+
+var cubDelta = function(progress, distance) {
+    return distance*(progress*progress*progress);
+}
+
+
+
+
+var hiperDelta = function(progress, distance) {
+    var base = progress/4.0 - .125;
+    var sign = base?base<0?-1:1:0
+    var power = 1.0/3.0;
+    var easing = sign*Math.pow(Math.abs(base), power) +.5;
+
+    console.log("base " + base);
+    console.log("power " + power);
+    console.log("easing " + easing);
+    return distance*easing;
+}
+
+// l = progress*distance. distance
+// 1 [0; 0.2] : y= x
+//
+
+var ceiling = function(value, ceil)
+{
+    return (value < ceil) ? value : ceil;
+}
+
+var flooring = function(value, floor)
+{
+    return (value > floor) ? (value - floor) : 0;
+}
+
+
+var comboEasing = function(progress, distance) {
+    var totalDistance =  hiperDelta(ceiling(progress,.2), distance);
+    totalDistance += linearDelta(
+                            ceiling(flooring(progress, 0.2), 0.6),
+                            distance
+                        );
+    totalDistance +=  hiperDelta(flooring(progress, 0.8), distance);
+
+    return totalDistance;
+}
+
 function Animation(tile, from, to, duration, interval, delta)
 {
     this.tile = tile;
@@ -95,7 +144,7 @@ function Animation(tile, from, to, duration, interval, delta)
         var now = (new Date().getTime()) - this.startTime; // Текущее время
         var progress = now / duration; // Прогресс анимации
      //   console.log(this.delta);
-        var position = this.from +  linearDelta(progress, (to - from));
+        var position = this.from +  comboEasing(progress, (to - from));
         console.log('progress:'+progress);
         console.log('position:'+position);
         this.tile.moveToX(position);
@@ -124,7 +173,7 @@ window.onload = function() {
 
 
 
-    var animation = new Animation(tile, 50, 350, 1000, 100, linearDelta);
+    var animation = new Animation(tile, 50, 550, 3000, 10, linearDelta);
 
     animation.start();
 
