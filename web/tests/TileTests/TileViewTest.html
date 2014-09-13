@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<script language="JavaScript" src="../../olganim.js"></script>
+<script language="JavaScript" type="text/javascript">
+    var t;
+    var tv;
+
+    window.onload = function()
+    {
+        t = new Tile("img1");
+        tv = new TileView(t, 100, 100, 200, 300)
+    }
+</script>
+<body>
+<img id="img1" src="./4D2fnJWoHWw.jpg" style="position:absolute; left:10px; top:10px;">
+<button id="btnright"  onclick="tv.moveOnX(10)" style="position:absolute; right:10px; top:10px;">right</button>
+<button id="btnleft"  onclick="tv.moveOnX(-10)" style="position:absolute; right:10px; top:50px;">left</button>
+<button id="btndown"  onclick="tv.moveOnY(10)" style="position:absolute; right:10px; top:100px;">down</button>
+<button id="btnup"  onclick="tv.moveOnY(-10)" style="position:absolute; right:10px; top:150px;">up</button>
+<button id="btnShowX"  onclick="this.innerHTML = t.getX()" style="position:absolute; right:10px; top:200px;">0</button>
+
+</body>
+</html>

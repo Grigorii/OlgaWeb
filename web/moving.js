@@ -12,9 +12,9 @@
     moveTo(x, y)    - перемещает объект в заданные кординаты
     moveToX(x)      - перемещает объект, изменяя его x-координату, на заданную
     moveToY(y)      - перемещает объект, изменяя его y-координату, на заданную
-    moveOn(x, y)    - перемещает объект, увеличивая его координаты на заданные величины
-    moveOnX(x)      - перемещает объект, увеличивая его x-координату, на заданную величину
-    moveOnY(y)      - перемещает объект, увеличивая его x-координату, на заданную величину
+    moveOn(deltaX, deltaY)    - перемещает объект, увеличивая его координаты на заданные величины
+    moveOnX(deltaX)      - перемещает объект, увеличивая его x-координату, на заданную величину
+    moveOnY(deltaY)      - перемещает объект, увеличивая его Y-координату, на заданную величину
 */
 
 function Tile(innerObjectId)
@@ -40,34 +40,33 @@ function Tile(innerObjectId)
             this.innerObject.style.top = this.y+ "px";
 
             console.log("this.innerObject.style.left:" + this.innerObject.style.left);
-        }
+        };
 
         this.moveToX = function(x)
         {
-
             this.moveTo(x, this.y);
-        }
+        };
 
         this.moveToY = function(y)
         {
             this.moveTo(this.x, y);
-        }
+        };
 
-        this.moveOn = function(x,  y)
+        this.moveOn = function(deltaX,  deltaY)
         {
-            this.moveTo(this.x + x, this.y + y);
-        }
+            this.moveTo(this.x + deltaX, this.y + deltaY);
+        };
 
-        this.moveOnX = function(x)
+        this.moveOnX = function(deltaX)
         {
 
-            this.moveOn(x, 0);
-        }
+            this.moveOn(deltaX, 0);
+        };
 
-        this.moveOnY = function(y)
+        this.moveOnY = function(deltaY)
         {
-            this.moveOn(0, y);
-        }
+            this.moveOn(0, deltaY);
+        };
 
     }else{
         console.log('Tile creation failed: object with specified id('+innerObjectId+') not found');

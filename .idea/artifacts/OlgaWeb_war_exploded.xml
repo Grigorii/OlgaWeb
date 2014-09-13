@@ -7,7 +7,11 @@
         <element id="directory" name="classes">
           <element id="module-output" name="OlgaWeb" />
         </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="postgresql-9.3-1100.jdbc4" />
+        </element>
       </element>
+      <element id="dir-copy" path="H:/apache/apache-tomcat-7.0.42/webapps/OlgaWeb" />
     </root>
   </artifact>
 </component>
