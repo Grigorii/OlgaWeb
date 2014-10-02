@@ -6,12 +6,93 @@
     <style>
         body {
             background: #000; /* Цвет фона */
+            margin: 0;
         }
+
+        .container {
+            line-height: 120px;
+            position: absolute;
+        }
+        .block {
+            display: inline-block;
+            line-height: 1.2px;
+            vertical-align: middle;
+            text-align: center;
+        }
+
+        /* Variables */
+        /* Basic stuff */
+
+        .clear-fix {
+            clear: both;
+        }
+
+        /* Not so important */
+        .images {
+            width: 620px;
+            padding: 20px 0 0 20px;
+            background: white;
+            margin: 20px auto;
+        }
+        .images .image {
+            margin: 0 20px 20px 0;
+            float: left;
+            box-shadow: 0 0 1px black;
+            /*Interesting part starts here */
+            font-size: 0;
+            text-align: center;
+            width: 186.66667px;
+            height: 124.44444px;
+        }
+        .images .image img {
+            display: inline-block;
+            vertical-align: middle;
+            max-height: 100%;
+            max-width: 100%;
+        }
+        .images .image:before {
+            content: "";
+            display: inline-block;
+            vertical-align: middle;
+            height: 100%;
+        }
+
+        /* Dmitry Filimonov 2013 */
     </style>
+    <script language="JavaScript">
+        window.onload = function() {
+         /*   var mainImg = document.getElementById("main_img");
+            var mainContainer = document.getElementById("main_container");
+            mainContainer.style.height = (document.documentElement.clientHeight *.8) + "px";
+            mainContainer.style.lineHeight = (document.documentElement.clientHeight *.8)  + "px";
+            mainContainer.style.width =  (document.documentElement.clientWidth *.8) + "px";
+            mainContainer.style.left = "10%";*/
+
+
+        }
+
+    </script>
 </head>
-<script language="JavaScript" src="moving.js"></script>
+
 
 <body>
-    <img id="img1" src="./img/kcJw51D0KRc.jpg" style="position:absolute; left:10%; top:10%; height: 80%;">
+  <div class="images">
+    <div class="image">
+        <img src="./img/kcJw51D0KRc.jpg"/>
+    </div>
+    <div class="image">
+        <img src="./img/4D2fnJWoHWw.jpg"/>
+    </div>
+    <div class="image">
+        <img src=". /img/gLF7ZPI_xFc.jpg"/>
+    </div>
+    <div class="clear-fix"></div>
+  </div>
+
+  <div id="main_container" class="container" style="border: 2px solid blue; width: 120px">
+      <p id="main_img" class="block">
+        <img id="img1" src = "./img/kcJw51D0KRc.jpg" style="max-width: 120px; max-height: 120px" >
+      </p>
+  </div>
 </body>
 </html>

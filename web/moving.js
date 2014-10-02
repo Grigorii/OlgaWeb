@@ -86,8 +86,6 @@ var cubDelta = function(progress, distance) {
 }
 
 
-
-
 var hiperDelta = function(progress, distance) {
     var base = progress/4.0 - .125;
     var sign = base?base<0?-1:1:0

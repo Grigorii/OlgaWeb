@@ -149,9 +149,15 @@ function AnimationX(tile)
 
         var now = (new Date().getTime()) - this.startTime; // Текущее время
 
-        var position = this.moveOnX(this.speedFunc(now)* (now - this.lastCicleTime)) ;
+        console.log(this.speedFunc);
+        console.log(this.speedFunc(now));
+        console.log(now - this.lastCicleTime);
+        var position = this.speedFunc(now)* (now - this.lastCicleTime) ;
         this.lastCicleTime = now;
-        this.tile.moveToX(position);
+
+        console.log( this.tile);
+        console.log( this.tile.moveToX);
+        this.tile.moveOnX(position);
         if (!this.terminated){
             var self = this;
             setTimeout(function(){ self.cycle(); }, this.interval);
@@ -163,7 +169,7 @@ function AnimationX(tile)
         this.interval =  interval;
         this.speedFunc =  speedFunc;
         this.startTime = new Date().getTime();
-        this.lastCicleTime = this.startTime;
+        this.lastCicleTime = 0;
         this.terminated = 0;
 
         this.cycle();
@@ -174,5 +180,11 @@ function AnimationX(tile)
         this.terminated = 1;
     };
 
+}
+
+
+var constantSpeed = function(time)
+{
+    return 0.05;
 }
 
