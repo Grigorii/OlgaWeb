@@ -29,7 +29,7 @@
 
         /* Not so important */
         .images {
-            width: 620px;
+            width: 1200px;
             padding: 20px 0 0 20px;
             background: white;
             margin: 20px auto;
@@ -37,12 +37,13 @@
         .images .image {
             margin: 0 20px 20px 0;
             float: left;
-            box-shadow: 0 0 1px black;
+            box-shadow: 0 0 1px white;
             /*Interesting part starts here */
             font-size: 0;
             text-align: center;
             width: 186.66667px;
             height: 124.44444px;
+            position: relative;
         }
         .images .image img {
             display: inline-block;
@@ -59,16 +60,31 @@
 
         /* Dmitry Filimonov 2013 */
     </style>
+    <script language="JavaScript" src="olganim.js">
+    </script>
     <script language="JavaScript">
+
+        var anima = new ComplexAnimation();
         window.onload = function() {
-         /*   var mainImg = document.getElementById("main_img");
-            var mainContainer = document.getElementById("main_container");
-            mainContainer.style.height = (document.documentElement.clientHeight *.8) + "px";
-            mainContainer.style.lineHeight = (document.documentElement.clientHeight *.8)  + "px";
-            mainContainer.style.width =  (document.documentElement.clientWidth *.8) + "px";
-            mainContainer.style.left = "10%";*/
 
+            var images = document.getElementsByClassName("images");
 
+            console.log("images="+images[0]);
+
+            var	bondImages = document.getElementsByClassName("image");
+
+            var margin = 5;
+            var imageWidth =  186.66667;
+            var imageLeft =  images[0].offsetLeft + margin;
+            var imageTop =  images[0].offsetHeight + margin ;
+
+            for ( var i  = 0; i <	bondImages.length; i++) {
+                var t = new Tile(bondImages[i].id, imageLeft, imageTop);
+                imageLeft += (margin + imageWidth);
+                var tv = new TileView(t, 0, 0, 1200, 300);
+                var an = new AnimationX(tv);
+                anima.add(an);
+            }
         }
 
     </script>
@@ -77,18 +93,26 @@
 
 <body>
   <div class="images">
-    <div class="image">
-        <img src="./img/kcJw51D0KRc.jpg"/>
+    <div class="image"  id="image0" style="left: 0px">
+        <img src="./img/2YynZZJgODQ.jpg"/>
     </div>
-    <div class="image">
+    <div class="image" id="image1" style="left: 0px">
         <img src="./img/4D2fnJWoHWw.jpg"/>
     </div>
-    <div class="image">
-        <img src=". /img/gLF7ZPI_xFc.jpg"/>
+    <div class="image" id="image2" style="left: 0px">
+        <img src="./img/5I3tyD2HsM8.jpg"/>
     </div>
-    <div class="clear-fix"></div>
-  </div>
+    <div class="image" id="image3" style="left: 0px">
+       <img src="./img/AdRmbVk2cU4.jpg"/>
+    </div>
+    <div class="image" id="image4" style="left: 0px">
+          <img src="./img/fEySk_b0E1k.jpg"/>
+    </div>
 
+
+  </div>
+  <button id="btnstart"  onclick="anima.start(constantSpeed, 100)" style="position:absolute; right:10px; top:10px;">start</button>
+  <button id="btnstop"  onclick="anima.stop()" style="position:absolute; right:10px; top:50px;">stop</button>
   <div id="main_container" class="container" style="border: 2px solid blue; width: 120px">
       <p id="main_img" class="block">
         <img id="img1" src = "./img/kcJw51D0KRc.jpg" style="max-width: 120px; max-height: 120px" >

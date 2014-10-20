@@ -11,6 +11,10 @@
         <servlet-name>UploadPhotoServlet</servlet-name>
         <servlet-class>com.kolev.olgaweb.UploadPhotoServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>MainServlet</servlet-name>
+        <servlet-class>MainServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>MainPageServlet</servlet-name>
         <url-pattern>/MainPageServlet.do</url-pattern>
@@ -18,5 +22,9 @@
     <servlet-mapping>
         <servlet-name>UploadPhotoServlet</servlet-name>
         <url-pattern>/UploadPhoto.do</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>MainServlet</servlet-name>
+        <url-pattern>/MainServlet.do</url-pattern>
     </servlet-mapping>
 </web-app>

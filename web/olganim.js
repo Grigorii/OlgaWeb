@@ -16,18 +16,24 @@
  moveOnY(deltaY)      - перемещает объект, увеличивая его Y-координату, на заданную величину
  */
 
-function Tile(innerObjectId)
+function Tile(innerObjectId, startX, startY)
 {
     this.innerObject = document.getElementById(innerObjectId);
 
     if (this.innerObject) {
         this.innerObject.style.position = "absolute";
 
-        this.x = 0;
-        this.x += this.innerObject.offsetLeft;
+        this.x = startX;
+        console.log("Tile.create: this.x="+this.y);
+        //this.x += this.innerObject.offsetLeft;
+       // this.x += this.offsetLeft;
 
-        this.y = 0;
-        this.y += this.innerObject.offsetTop;
+        this.y = startY;
+        console.log("Tile.create: this.y="+this.y);
+       // this.y = this.innerObject.left;
+        //this.y += this.innerObject.offsetTop;
+        //console.log("Tile.constructor: y="+this.y);
+
 
         this.getX = function () {
             return this.x;
@@ -41,11 +47,14 @@ function Tile(innerObjectId)
             this.x = x;
             this.y = y;
 
+            console.log("Tile.moveTo: y="+y);
+
             this.innerObject.style.left = this.x + "px";
             this.innerObject.style.top = this.y + "px";
         };
 
         this.moveOn = function (deltaX, deltaY) {
+            console.log("Tile.moveOn: this.y="+this.y);
             this.moveTo(this.x + deltaX, this.y + deltaY);
         };
 
@@ -101,6 +110,8 @@ function TileView(tile, top, left, width, height)
         var newX = this.left + x % this.width;
         var newY = this.top +y % this.height;
 
+        console.log("TileView: newY="+newY);
+
         this.tile.moveTo( newX, newY);
     };
 
@@ -149,14 +160,9 @@ function AnimationX(tile)
 
         var now = (new Date().getTime()) - this.startTime; // Текущее время
 
-        console.log(this.speedFunc);
-        console.log(this.speedFunc(now));
-        console.log(now - this.lastCicleTime);
         var position = this.speedFunc(now)* (now - this.lastCicleTime) ;
         this.lastCicleTime = now;
 
-        console.log( this.tile);
-        console.log( this.tile.moveToX);
         this.tile.moveOnX(position);
         if (!this.terminated){
             var self = this;
@@ -180,6 +186,38 @@ function AnimationX(tile)
         this.terminated = 1;
     };
 
+}
+
+
+/***
+ * Объект для работы с коллекцией Анимаций, как с одной
+ */
+function ComplexAnimation()
+{
+    this.storage = new Array();
+    this.count = 0;
+
+    this.add = function(animation)
+    {
+        this.storage[this.count] = animation;
+        this.count++;
+    }
+
+    this.start =  function(speedFunc, interval)
+    {
+        for(var i=0;i<this.count;i++)
+        {
+            this.storage[i].start(speedFunc, interval);
+        }
+    }
+
+    this.stop =  function()
+    {
+        for(var i=0;i<this.count;i++)
+        {
+            this.storage[i].stop();
+        }
+    }
 }
 
 
