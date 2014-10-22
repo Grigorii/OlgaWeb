@@ -63,9 +63,6 @@ function Tile(innerObjectId, startX, startY)
             this.moveOn(deltaX, 0);
         };
 
-        this.moveOnY = function (deltaY) {
-            this.moveOn(0, deltaY);
-        }
 
     } else {
         console.error('Tile creation failed: object with specified id(' + innerObjectId + ') not found');
@@ -135,10 +132,6 @@ function TileView(tile, top, left, width, height)
     };
 
 
-    this.moveOnY = function(deltaY)
-    {
-        this.moveOn(0, deltaY);
-    }
 
 }
 
@@ -189,6 +182,7 @@ function AnimationX(tile)
 }
 
 
+
 /***
  * Объект для работы с коллекцией Анимаций, как с одной
  */
@@ -220,7 +214,68 @@ function ComplexAnimation()
     }
 }
 
+/***
+* Объект для работы с коллекцией объектов, как ComplexAnimation
+* при этом используется один таймер
+*/
+function FastComplexAnimation()
+{
+    this.terminated = 1;
+    this.storage = new Array();
+    this.count = 0;
 
+    /**
+     *
+     * @param tile - параметр типа TileView или Tile
+     */
+    this.add = function(tile)
+    {
+        this.storage[this.count] = tile;
+        this.count++;
+    }
+
+
+    this.cycle = function(){
+
+        var now = (new Date().getTime()) - this.startTime; // Текущее время
+
+        var position = this.speedFunc(now)* (now - this.lastCicleTime) ;
+        this.lastCicleTime = now;
+
+        for(var i=0;i<this.count;i++)
+        {
+            this.storage[i].moveOnX(position);
+        }
+
+
+        if (!this.terminated){
+            var self = this;
+            setTimeout(function(){ self.cycle(); }, this.interval);
+        }
+    };
+
+    this.start = function(speedFunc, interval)
+    {
+        this.interval =  interval;
+        this.speedFunc =  speedFunc;
+        this.startTime = new Date().getTime();
+        this.lastCicleTime = 0;
+        this.terminated = 0;
+
+        this.cycle();
+    };
+
+    this.stop = function()
+    {
+        this.terminated = 1;
+    };
+}
+
+/**
+ *
+ * @param time
+ * @returns {number}
+ */
 var constantSpeed = function(time)
 {
     return 0.05;

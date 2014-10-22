@@ -15,7 +15,7 @@
         }
         .block {
             display: inline-block;
-            line-height: 1.2px;
+            line-height: 1px;
             vertical-align: middle;
             text-align: center;
         }
@@ -41,8 +41,8 @@
             /*Interesting part starts here */
             font-size: 0;
             text-align: center;
-            width: 186.66667px;
-            height: 124.44444px;
+            width: 186px;
+            height: 124px;
             position: relative;
         }
         .images .image img {
@@ -64,7 +64,7 @@
     </script>
     <script language="JavaScript">
 
-        var anima = new ComplexAnimation();
+        var anima = new FastComplexAnimation();
         window.onload = function() {
 
             var images = document.getElementsByClassName("images");
@@ -82,8 +82,8 @@
                 var t = new Tile(bondImages[i].id, imageLeft, imageTop);
                 imageLeft += (margin + imageWidth);
                 var tv = new TileView(t, 0, 0, 1200, 300);
-                var an = new AnimationX(tv);
-                anima.add(an);
+               // var an = new AnimationX(tv);
+                anima.add(tv);
             }
         }
 
@@ -93,19 +93,19 @@
 
 <body>
   <div class="images">
-    <div class="image"  id="image0" style="left: 0px">
+    <div class="image"  id="image0" style="left: 0">
         <img src="./img/2YynZZJgODQ.jpg"/>
     </div>
-    <div class="image" id="image1" style="left: 0px">
+    <div class="image" id="image1" style="left: 0">
         <img src="./img/4D2fnJWoHWw.jpg"/>
     </div>
-    <div class="image" id="image2" style="left: 0px">
+    <div class="image" id="image2" style="left: 0">
         <img src="./img/5I3tyD2HsM8.jpg"/>
     </div>
-    <div class="image" id="image3" style="left: 0px">
+    <div class="image" id="image3" style="left: 0">
        <img src="./img/AdRmbVk2cU4.jpg"/>
     </div>
-    <div class="image" id="image4" style="left: 0px">
+    <div class="image" id="image4" style="left: 0">
           <img src="./img/fEySk_b0E1k.jpg"/>
     </div>
 
