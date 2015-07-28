@@ -3,13 +3,14 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title></title>
+    <link rel="stylesheet" type="text/css" href="components/cmb/DropDownList.css">
     <style>
         body {
-            background: #000; /* Цвет фона */
+            background: #540; /* Цвет фона */
             margin: 0;
         }
 
-        .container {
+       /* .container {
             line-height: 120px;
             position: absolute;
         }
@@ -20,103 +21,279 @@
             text-align: center;
         }
 
-        /* Variables */
-        /* Basic stuff */
-
         .clear-fix {
             clear: both;
-        }
+        }*/
 
         /* Not so important */
         .images {
+            bottom: 0px;
+          /*  left: -5px;*/
             width: 1200px;
-            padding: 20px 0 0 20px;
-            background: white;
-            margin: 20px auto;
+            /*padding: 20px 0 0 20px;*/
+            background: black;
+         /*   margin: 20px auto;*/
+            height: 124px;
+            overflow: hidden;
+            position: absolute;
         }
         .images .image {
-            margin: 0 20px 20px 0;
+            border: 0px solid white;
             float: left;
-            box-shadow: 0 0 1px white;
             /*Interesting part starts here */
-            font-size: 0;
-            text-align: center;
+           /* font-size: 0;*/
+           /* text-align: center;*/
             width: 186px;
             height: 124px;
-            position: relative;
+            top: 0px;
+            position: absolute;
         }
         .images .image img {
-            display: inline-block;
-            vertical-align: middle;
-            max-height: 100%;
-            max-width: 100%;
+          /*  display: inline-block;*/
+       /*     vertical-align: middle;*/
+        /*    max-height: 100%;*/
+         /*   max-width: 100%;*/
+              width: 100%;
         }
-        .images .image:before {
+       /* .images .image:before {
             content: "";
             display: inline-block;
             vertical-align: middle;
             height: 100%;
-        }
+        }*/
 
         /* Dmitry Filimonov 2013 */
+
+        .circle {
+            border-radius: 10px;
+        }
+
+        div.topband{
+            top: 6px;
+        }
+
+        div.bottomband{
+            bottom: 0px;
+        }
+
+        div.signa{
+            font-family: "Times New Roman";
+            height: 80px;
+            margin-top: 0px;
+            color: #6d6d6d;
+            background-color: #000000;
+            padding: 10px;
+            padding-left: 20px;
+            padding-top: 20px;
+        }
+
+        div.signatext{
+            font-size: 36pt;
+            float: left;
+        }
+
+        ul.contact_list{
+            float: right;
+            margin-right: 6px;
+            list-style: none;
+        }
+
+        li.vk{
+            background-image: url(./img/service/vk.png);
+            background-repeat: no-repeat;
+            background-size: 16px 16px;
+            padding-left: 20px;
+        }
+        li.phone{
+            background-image: url(./img/service/phone.png);
+            background-repeat: no-repeat;
+            background-size: 16px 16px;
+            padding-left: 20px;
+        }
+
+        .success_item
+        {
+            color: #144e37;
+            background-color: #891b24;
+        }
+
+
     </style>
-    <script language="JavaScript" src="olganim.js">
-    </script>
+    <script language="JavaScript" src="olganim.js"></script>
+    <script language="JavaScript" src="ScreenUtils.js"></script>
     <script language="JavaScript">
 
         var anima = new FastComplexAnimation();
-        window.onload = function() {
+        var manager = new AnimationManager(anima, .2, .8);
+        var initializationComplete = false;
+
+        var initialize = function(){
+            manager.close();
 
             var images = document.getElementsByClassName("images");
-
-            console.log("images="+images[0]);
-
             var	bondImages = document.getElementsByClassName("image");
 
-            var margin = 5;
-            var imageWidth =  186.66667;
-            var imageLeft =  images[0].offsetLeft + margin;
-            var imageTop =  images[0].offsetHeight + margin ;
+            var screenRect =  getScreenSize();
+            var bondSize = new BondSizeValues(screenRect);
 
-            for ( var i  = 0; i <	bondImages.length; i++) {
+            var margin = 0;
+            var imageWidth =  bondSize.getImageWidth();
+            var firstImageLeft = -bondSize.getImageWidth();
+            var imageLeft =  firstImageLeft; // хрен его знает почему, но почему-то все имаджи съезжают вправо на одну позицию
+            var bondWidth = bondSize.getBandWidth();
+            console.log("bondWidth = " + bondWidth);
+            var imageTop =  0;
+
+
+            images[0].style.left = "0px";
+            images[0].style.width = bondWidth + "px";
+            images[0].style.height = bondSize.getBandHeight() + "px";
+
+            for ( var i  = 0; i <bondImages.length; i++) {
+                bondImages[i].style.width = imageWidth + "px";
+                bondImages[i].style.height = bondSize.getBandHeight() + "px";
+
                 var t = new Tile(bondImages[i].id, imageLeft, imageTop);
                 imageLeft += (margin + imageWidth);
-                var tv = new TileView(t, 0, 0, 1200, 300);
-               // var an = new AnimationX(tv);
+                var tv = new TileView(t, 0, -bondSize.getImageWidth(), bondSize.getBandWidth(), 0);
                 anima.add(tv);
             }
+
+            console.log("Hi, there!");
+
+            $(".dropdown").css("bottom",  bondSize.getBandHeight() + 10 );
+
+            initializationComplete = true;
+
+            images[0].onmousemove = function() {
+                manager.process(getMousePosition());
+            }
+
+            images[0].onmouseout = function(){
+                manager.stop();
+            }
+
+            manager.process(getMousePosition());
+
+
+
         }
+
+
+        window.onload = function() {
+            initialize();
+
+
+        }
+
+        window.onresize = function() {
+            if(initializationComplete)
+            {
+                initializationComplete = false;
+                window.setTimeout(initialize, 1000);
+            }
+        }
+
+       /* document.onmousemove = function() {
+            var pos = getMousePosition();
+
+            if (pos.getY() / document.documentElement.clientHeight > .8) {
+
+                if ((pos.getX() / document.documentElement.clientWidth) < .2) {
+                    console.log("left");
+                }
+
+                if ((pos.getX() / document.documentElement.clientWidth) > .8) {
+                 console.log("right");
+                }
+            }
+            console.log("x = " + pos.getX() + "; y = " + pos.getY());
+        }*/
+
+
+
+        }
+
 
     </script>
 </head>
 
 
 <body>
-  <div class="images">
+<div class="header">
+    <div class="signa">
+        <div class="signatext">
+        Shirokova Olga Photography
+        </div>
+        <ul class="contact_list">
+            <li class="phone">+79164749562</li>
+            <li class="vk">http://vk.com/red_angel_photo</li>
+        </ul>
+    </div>
+    <div class="cinemaband bottomband"></div>
+</div>
+
+
+<div class="images">
     <div class="image"  id="image0" style="left: 0">
-        <img src="./img/2YynZZJgODQ.jpg"/>
+        <img src="./img/small/2YynZZJgODQ.jpg"/>
     </div>
     <div class="image" id="image1" style="left: 0">
-        <img src="./img/4D2fnJWoHWw.jpg"/>
+        <img src="./img/small/4D2fnJWoHWw.jpg"/>
     </div>
     <div class="image" id="image2" style="left: 0">
-        <img src="./img/5I3tyD2HsM8.jpg"/>
+        <img src="./img/small/5I3tyD2HsM8.jpg"/>
     </div>
     <div class="image" id="image3" style="left: 0">
-       <img src="./img/AdRmbVk2cU4.jpg"/>
+        <img src="./img/small/AdRmbVk2cU4.jpg"/>
     </div>
     <div class="image" id="image4" style="left: 0">
-          <img src="./img/fEySk_b0E1k.jpg"/>
+        <img src="./img/small/fEySk_b0E1k.jpg"/>
+    </div>
+    <div class="image" id="image5" style="left: 0">
+        <img src="./img/small/Zi-KEbPA6A0.jpg"/>
+    </div>
+    <div class="image" id="image6" style="left: 0">
+        <img src="./img/small/fuceFEQsp9k.jpg"/>
+    </div>
+    <div class="image" id="image7" style="left: 0">
+        <img src="./img/small/gLF7ZPI_xFc.jpg"/>
+    </div>
+    <div class="image" id="image8" style="left: 0">
+        <img src="./img/small/gqlwRAv6JFc.jpg"/>
+    </div>
+    <div class="image" id="image9" style="left: 0">
+        <img src="./img/small/JGkGoccEzPk.jpg"/>
+    </div>
+    <div class="image" id="image10" style="left: 0">
+        <img src="./img/small/l4V8iRncJLU.jpg"/>
+    </div>
+    <div class="image" id="image11" style="left: 0">
+        <img src="./img/small/NCl6dv8eNwY.jpg"/>
     </div>
 
-
+</div>
+  <div style="height:100px;width:150px;overflow: hidden;top:400px;position: absolute; text-align:center;" >
+      <img src="./img/AdRmbVk2cU4.jpg" style="width:100%"/>
   </div>
   <button id="btnstart"  onclick="anima.start(constantSpeed, 100)" style="position:absolute; right:10px; top:10px;">start</button>
   <button id="btnstop"  onclick="anima.stop()" style="position:absolute; right:10px; top:50px;">stop</button>
-  <div id="main_container" class="container" style="border: 2px solid blue; width: 120px">
-      <p id="main_img" class="block">
-        <img id="img1" src = "./img/kcJw51D0KRc.jpg" style="max-width: 120px; max-height: 120px" >
-      </p>
-  </div>
+
+    <div class="dropdown circle">
+        <a class="account" >Люди</a>
+
+        <div class="submenu">
+            <ul class="root">
+                <li ><a href="#Dashboard" >Свадьбы</a></li>
+                <li ><a href="#Profile" >Портретная</a></li>
+                <li ><a href="#settings">Природа</a></li>
+                <li ><a href="#feedback">Ню</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.js"></script>
+    <script type="text/javascript" src="components/cmb/DropDownList.js"></script>
 </body>
 </html>

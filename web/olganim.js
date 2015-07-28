@@ -24,15 +24,8 @@ function Tile(innerObjectId, startX, startY)
         this.innerObject.style.position = "absolute";
 
         this.x = startX;
-        console.log("Tile.create: this.x="+this.y);
-        //this.x += this.innerObject.offsetLeft;
-       // this.x += this.offsetLeft;
-
         this.y = startY;
-        console.log("Tile.create: this.y="+this.y);
-       // this.y = this.innerObject.left;
-        //this.y += this.innerObject.offsetTop;
-        //console.log("Tile.constructor: y="+this.y);
+
 
 
         this.getX = function () {
@@ -47,14 +40,14 @@ function Tile(innerObjectId, startX, startY)
             this.x = x;
             this.y = y;
 
-            console.log("Tile.moveTo: y="+y);
+            //console.log("Tile.moveTo: x="+x);
 
             this.innerObject.style.left = this.x + "px";
             this.innerObject.style.top = this.y + "px";
         };
 
         this.moveOn = function (deltaX, deltaY) {
-            console.log("Tile.moveOn: this.y="+this.y);
+            //console.log("Tile.moveOn: this.x="+this.x);
             this.moveTo(this.x + deltaX, this.y + deltaY);
         };
 
@@ -62,6 +55,8 @@ function Tile(innerObjectId, startX, startY)
 
             this.moveOn(deltaX, 0);
         };
+
+        this.moveTo(startX, startY);
 
 
     } else {
@@ -107,8 +102,6 @@ function TileView(tile, top, left, width, height)
         var newX = this.left + x % this.width;
         var newY = this.top +y % this.height;
 
-        console.log("TileView: newY="+newY);
-
         this.tile.moveTo( newX, newY);
     };
 
@@ -118,7 +111,6 @@ function TileView(tile, top, left, width, height)
         // и сохраняем в локальных переменных
         var newX = this.tile.getX() - this.left;
         var newY = this.tile.getY()  - this.top;
-        console.log("this.moveOn " + newX );
 
         this.moveTo(newX + deltaX, newY + deltaY);
     };
@@ -127,7 +119,6 @@ function TileView(tile, top, left, width, height)
 
     this.moveOnX = function(deltaX)
     {
-        console.log("this.moveOnX " + deltaX );
         this.moveOn(deltaX, 0);
     };
 
@@ -281,3 +272,68 @@ var constantSpeed = function(time)
     return 0.05;
 }
 
+var inverseSpeed = function(time)
+{
+    return -0.05;
+}
+
+/**
+ * Объект для запуска, остановки анимации
+ * в зависимости от положения курсора мыши
+ * @param animation - объект типа AnimationX чьим поведением будем управлять
+ * @param leftBorder - левая граница(в процентах от экрана) при которой происходит запуск анимации
+ * @param rightBorder - правая  граница(в процентах от экрана) при которой происходит запуск анимации
+ * @constructor
+ */
+function AnimationManager(animation, leftBorder, rightBorder){
+    var _animation = animation;
+    var _leftBorder = leftBorder;
+    var _rightBorder = rightBorder;
+    var _state = 0; // состояние анимации -1: двигается влево, 1: двигается вправо, 0: стоит на месте
+
+    var getStateByMousePos = function(mousePosition){
+        if ((mousePosition.getX() / document.documentElement.clientWidth) < leftBorder)
+            return -1;
+        else if ((mousePosition.getX() / document.documentElement.clientWidth) > _rightBorder)
+            return 1;
+        else
+            return 0;
+    }
+
+
+    /**
+     *
+     * @param mousePosition - объект типа MousePosition содержащий положение курсора
+     */
+    this.process = function(mousePosition){
+        var newState = getStateByMousePos(mousePosition);
+        console.log("newState = " + newState + "; _state = " + _state);
+        if(newState != _state){
+            if(_state != 0){
+                _animation.stop();
+            }
+
+            if (newState == 1){
+                _animation.start(constantSpeed, 100);
+            }
+
+            if (newState == -1) {
+                _animation.start(inverseSpeed, 100);
+            }
+
+            _state = newState;
+        }
+    }
+
+    this.stop = function()
+    {
+        console.log("manager.stop");
+        _state = 0;
+        _animation.stop();
+    }
+
+    this.close = function(){
+        _animation.stop();
+        _state=0;
+    }
+}

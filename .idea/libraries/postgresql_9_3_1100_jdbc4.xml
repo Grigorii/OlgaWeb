@@ -2,6 +2,8 @@
   <library name="postgresql-9.3-1100.jdbc4">
     <CLASSES>
       <root url="jar://C:/Program Files (x86)/PostgreSQL/pgJDBC/postgresql-9.3-1100.jdbc4.jar!/" />
+      <root url="jar://H:/apache/apache-tomcat-8.0.24/lib/tomcat-api.jar!/" />
+      <root url="jar://H:/apache/apache-tomcat-8.0.24/lib/servlet-api.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
